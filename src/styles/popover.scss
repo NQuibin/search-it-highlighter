@@ -22,6 +22,7 @@ $separator: #696969;
     box-shadow: 0 0 4px 2px #000000;
     animation: google-it-highlighter-intro 0.3s;
     animation-fill-mode: forwards;
+    font-size: 16px;
 
     > div.search-options-nq {
         position: relative;
@@ -73,8 +74,8 @@ $separator: #696969;
         > img {
             margin: 0;
             padding: 5px;
-            height: 26px;
-            width: 26px;
+            height: 1.6rem;
+            width: 1.6rem;
             cursor: pointer;
 
             &:nth-of-type(2) {
