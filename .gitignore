@@ -1,0 +1,8 @@
+# phpStorm
+.idea/
+
+# nodejs
+node_modules/
+
+# other
+.DS_Store
