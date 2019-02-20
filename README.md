@@ -1,2 +1,2 @@
-# google-it-highlighter
-Chrome Extension -Google highlighted text
+# Google It Highlighter
+A Chrome extension to quickly google search selected text on a page.
