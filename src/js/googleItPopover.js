@@ -4,6 +4,26 @@ export default class GoogleItPopover {
         this.text = '';
     }
 
+    // helper to visualize the selection box
+    _createBox = rect => {
+        let tableRectDiv = document.createElement('div');
+
+        tableRectDiv.style.position = 'absolute';
+        tableRectDiv.style.border = '1px solid red';
+
+        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
+
+        tableRectDiv.style.margin = tableRectDiv.style.padding = '0';
+        tableRectDiv.style.top = `${(rect.top + scrollTop)}px`;
+        tableRectDiv.style.left = `${(rect.left + scrollLeft)}px`;
+
+        // We want rect.width to be the border width, so content width is 2px less.
+        tableRectDiv.style.width = `${(rect.width - 2)}px`;
+        tableRectDiv.style.height = `${(rect.height - 2)}px`;
+        document.body.appendChild(tableRectDiv);
+    };
+
     _doSearch = fileType => {
         let url = `http://www.google.com/search?q=${encodeURIComponent(this.text)}`;
 
@@ -22,7 +42,7 @@ export default class GoogleItPopover {
     _toggleOptionListeners = add => {
         const action = add ? 'addEventListener' : 'removeEventListener';
         const options = this.popover.querySelectorAll(
-            '.google-it-highlighter-popover .search-nq'
+            '#google-it-highlighter-popover .search-nq'
         );
 
         for (const option of options) {
@@ -38,29 +58,27 @@ export default class GoogleItPopover {
                 selection &&
                 selection.rangeCount &&
                 selection.getRangeAt(0).cloneRange();
-            const rects = range && range.getClientRects && range.getClientRects();
-            const box = rects && rects.length > 0 && rects[0];
-
+            const rect = range.getBoundingClientRect();
             const scrollPos = document.documentElement.scrollTop;
 
-            let xPos = box.left + box.width / 2 - 55;
-            let yPos = box.top - 45 + scrollPos;
+            let xPos = rect.left + rect.width / 2 - 55;
+            let yPos = rect.top - 45 + scrollPos;
             let tailClass = 'tail';
 
             if (xPos < 0) {
-                xPos = box.right + 10;
-                yPos = box.top;
+                xPos = rect.right + 10;
+                yPos = rect.top;
                 tailClass = 'tail-left';
             } else if (xPos + 110 >= document.documentElement.clientWidth) {
-                xPos = box.left - 120;
-                yPos = box.top;
+                xPos = rect.left - 120;
+                yPos = rect.top + scrollPos;
                 tailClass = 'tail-right';
             } else if (yPos < 0) {
-                yPos = box.bottom + 10 + scrollPos;
+                yPos = rect.bottom + 10 + scrollPos;
                 tailClass = 'tail-top';
             }
 
-            const text = box && window.getSelection().toString();
+            const text = rect && window.getSelection().toString();
             this.text = text && text.trim();
 
             return [ xPos, yPos, tailClass ];
@@ -74,7 +92,7 @@ export default class GoogleItPopover {
 
         if (coordinates.length) {
             this.popover = document.createElement('div');
-            this.popover.classList.add('google-it-highlighter-popover');
+            this.popover.id = 'google-it-highlighter-popover';
 
             const googleIconURL = chrome.runtime.getURL('assets/google.png');
             const pdfIconURL = chrome.runtime.getURL('assets/pdf.png');
