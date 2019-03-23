@@ -2,10 +2,15 @@ import GoogleItPopover from './googleItPopover';
 
 import '../styles/popover.scss';
 
-let popover = new GoogleItPopover();
+let popover = null;
 let keyPressCount = 0;
 
 const createGoogleItHighlighter = e => {
+    if (!popover) {
+        popover = new GoogleItPopover();
+        popover.create();
+    }
+
     if (e.key === 'g' || e.key === 'G') {
         popover.create();
         keyPressCount += 1;
@@ -22,11 +27,16 @@ const createGoogleItHighlighter = e => {
     }
 };
 
-
+const destroyGoogleItHighlighter = () => {
+    if (popover) {
+        popover.destroy();
+        popover = null;
+    }
+};
 
 const init = () => {
     window.addEventListener('keyup', createGoogleItHighlighter);
-    document.addEventListener('selectionchange', popover.destroy);
+    document.addEventListener('selectionchange', destroyGoogleItHighlighter);
 };
 
 const readyStateCheckInterval = setInterval(() => {

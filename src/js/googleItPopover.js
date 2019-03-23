@@ -54,34 +54,38 @@ export default class GoogleItPopover {
         const selection = window.getSelection();
 
         if (selection && selection.type === 'Range' && !selection.isCollapsed) {
-            const range =
-                selection &&
-                selection.rangeCount &&
-                selection.getRangeAt(0).cloneRange();
-            const rect = range.getBoundingClientRect();
-            const scrollPos = document.documentElement.scrollTop;
+            try {
+                const range =
+                    selection &&
+                    selection.rangeCount &&
+                    selection.getRangeAt(0).cloneRange();
+                const rect = range.getBoundingClientRect();
+                const scrollPos = document.documentElement.scrollTop;
 
-            let xPos = rect.left + rect.width / 2 - 55;
-            let yPos = rect.top - 45 + scrollPos;
-            let tailClass = 'tail';
+                let xPos = rect.left + rect.width / 2 - 55;
+                let yPos = rect.top - 45 + scrollPos;
+                let tailClass = 'tail';
 
-            if (xPos < 0) {
-                xPos = rect.right + 10;
-                yPos = rect.top;
-                tailClass = 'tail-left';
-            } else if (xPos + 110 >= document.documentElement.clientWidth) {
-                xPos = rect.left - 120;
-                yPos = rect.top + scrollPos;
-                tailClass = 'tail-right';
-            } else if (yPos < 0) {
-                yPos = rect.bottom + 10 + scrollPos;
-                tailClass = 'tail-top';
+                if (xPos < 0) {
+                    xPos = rect.right + 10;
+                    yPos = rect.top;
+                    tailClass = 'tail-left';
+                } else if (xPos + 110 >= document.documentElement.clientWidth) {
+                    xPos = rect.left - 120;
+                    yPos = rect.top + scrollPos;
+                    tailClass = 'tail-right';
+                } else if (yPos < 0) {
+                    yPos = rect.bottom + 10 + scrollPos;
+                    tailClass = 'tail-top';
+                }
+
+                const text = rect && window.getSelection().toString();
+                this.text = text && text.trim();
+
+                return [ xPos, yPos, tailClass ];
+            } catch (e) {
+                return [];
             }
-
-            const text = rect && window.getSelection().toString();
-            this.text = text && text.trim();
-
-            return [ xPos, yPos, tailClass ];
         } else {
             return [];
         }
