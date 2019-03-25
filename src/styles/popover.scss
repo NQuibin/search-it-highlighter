@@ -13,7 +13,6 @@ $separator: #696969;
 };
 
 #google-it-highlighter-popover {
-    box-sizing: border-box;
     position: absolute;
     z-index: 9998;
     margin: 0;
@@ -72,10 +71,11 @@ $separator: #696969;
         }
 
         > img {
+            box-sizing: border-box;
+            width: 36px;
+            height: 36px;
             margin: 0;
             padding: 5px;
-            width: 26px;
-            height: 26px;
             cursor: pointer;
             transition: all 0.2s;
 
