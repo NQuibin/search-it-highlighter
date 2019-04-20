@@ -8,7 +8,6 @@ let keyPressCount = 0;
 const createGoogleItHighlighter = e => {
     if (!popover) {
         popover = new GoogleItPopover();
-        popover.create();
     }
 
     if (e.key === 'g' || e.key === 'G') {
