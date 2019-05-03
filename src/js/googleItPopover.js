@@ -1,3 +1,8 @@
+/**
+ * Google icon provided by Freepik: https://www.freepik.com/
+ * PDF and DOC icon provided by Dimitry Miroliubov: https://www.flaticon.com/authors/dimitry-miroliubov
+ */
+
 export default class GoogleItPopover {
     constructor() {
         this.popover = null;
@@ -11,21 +16,25 @@ export default class GoogleItPopover {
         tableRectDiv.style.position = 'absolute';
         tableRectDiv.style.border = '1px solid red';
 
-        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-        let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
+        let scrollTop =
+            document.documentElement.scrollTop || document.body.scrollTop;
+        let scrollLeft =
+            document.documentElement.scrollLeft || document.body.scrollLeft;
 
         tableRectDiv.style.margin = tableRectDiv.style.padding = '0';
-        tableRectDiv.style.top = `${(rect.top + scrollTop)}px`;
-        tableRectDiv.style.left = `${(rect.left + scrollLeft)}px`;
+        tableRectDiv.style.top = `${rect.top + scrollTop}px`;
+        tableRectDiv.style.left = `${rect.left + scrollLeft}px`;
 
         // We want rect.width to be the border width, so content width is 2px less.
-        tableRectDiv.style.width = `${(rect.width - 2)}px`;
-        tableRectDiv.style.height = `${(rect.height - 2)}px`;
+        tableRectDiv.style.width = `${rect.width - 2}px`;
+        tableRectDiv.style.height = `${rect.height - 2}px`;
         document.body.appendChild(tableRectDiv);
     };
 
     _doSearch = fileType => {
-        let url = `http://www.google.com/search?q=${encodeURIComponent(this.text)}`;
+        let url = `http://www.google.com/search?q=${encodeURIComponent(
+            this.text
+        )}`;
 
         if (fileType) {
             url += `&as_filetype=${fileType}`;
@@ -82,7 +91,7 @@ export default class GoogleItPopover {
                 const text = rect && window.getSelection().toString();
                 this.text = text && text.trim();
 
-                return [ xPos, yPos, tailClass ];
+                return [xPos, yPos, tailClass];
             } catch (e) {
                 return [];
             }
@@ -113,7 +122,9 @@ export default class GoogleItPopover {
 
             this.popover.style.left = `${coordinates[0]}px`;
             this.popover.style.top = `${coordinates[1]}px`;
-            this.popover.querySelector('.tail').classList.replace('tail', coordinates[2]);
+            this.popover
+                .querySelector('.tail')
+                .classList.replace('tail', coordinates[2]);
 
             this._toggleOptionListeners(true);
 
