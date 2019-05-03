@@ -2,6 +2,8 @@ import GoogleItPopover from './googleItPopover';
 
 import '../styles/popover.scss';
 
+const TRIGGER_KEYS = ['g', 'G'];
+
 let popover = null;
 let keyPressCount = 0;
 
@@ -10,7 +12,7 @@ const createGoogleItHighlighter = e => {
         popover = new GoogleItPopover();
     }
 
-    if (e.key === 'g' || e.key === 'G') {
+    if (TRIGGER_KEYS.includes(e.key)) {
         popover.create();
         keyPressCount += 1;
     }
