@@ -3,49 +3,16 @@
  * PDF and DOC icon provided by Dimitry Miroliubov: https://www.flaticon.com/authors/dimitry-miroliubov
  */
 
+import { searchSelectedText } from './searchText';
+
 export default class GoogleItPopover {
     constructor() {
         this.popover = null;
-        this.text = '';
     }
-
-    // helper to visualize the selection box
-    _createBox = rect => {
-        let tableRectDiv = document.createElement('div');
-
-        tableRectDiv.style.position = 'absolute';
-        tableRectDiv.style.border = '1px solid red';
-
-        let scrollTop =
-            document.documentElement.scrollTop || document.body.scrollTop;
-        let scrollLeft =
-            document.documentElement.scrollLeft || document.body.scrollLeft;
-
-        tableRectDiv.style.margin = tableRectDiv.style.padding = '0';
-        tableRectDiv.style.top = `${rect.top + scrollTop}px`;
-        tableRectDiv.style.left = `${rect.left + scrollLeft}px`;
-
-        // We want rect.width to be the border width, so content width is 2px less.
-        tableRectDiv.style.width = `${rect.width - 2}px`;
-        tableRectDiv.style.height = `${rect.height - 2}px`;
-        document.body.appendChild(tableRectDiv);
-    };
-
-    _doSearch = fileType => {
-        let url = `http://www.google.com/search?q=${encodeURIComponent(
-            this.text
-        )}`;
-
-        if (fileType) {
-            url += `&as_filetype=${fileType}`;
-        }
-
-        window.open(url);
-    };
 
     _handleOptionClick = e => {
         const fileType = e.currentTarget.getAttribute('data-filetype');
-        this._doSearch(fileType);
+        searchSelectedText(fileType);
     };
 
     _toggleOptionListeners = add => {
@@ -73,25 +40,25 @@ export default class GoogleItPopover {
 
                 let xPos = rect.left + rect.width / 2 - 55;
                 let yPos = rect.top - 45 + scrollPos;
+                let searchOptionsClass = 'search-options-nq';
                 let tailClass = 'tail';
 
                 if (xPos < 0) {
                     xPos = rect.right + 10;
-                    yPos = rect.top;
-                    tailClass = 'tail-left';
+                    yPos = rect.top + scrollPos - 36;
+                    tailClass += '-left';
+                    searchOptionsClass += '-horizontal';
                 } else if (xPos + 110 >= document.documentElement.clientWidth) {
-                    xPos = rect.left - 120;
-                    yPos = rect.top + scrollPos;
-                    tailClass = 'tail-right';
+                    xPos = rect.left - 46;
+                    yPos = rect.top + scrollPos - 36;
+                    tailClass += '-right';
+                    searchOptionsClass += '-horizontal';
                 } else if (yPos < 0) {
                     yPos = rect.bottom + 10 + scrollPos;
-                    tailClass = 'tail-top';
+                    tailClass += '-top';
                 }
 
-                const text = rect && window.getSelection().toString();
-                this.text = text && text.trim();
-
-                return [xPos, yPos, tailClass];
+                return [xPos, yPos, tailClass, searchOptionsClass];
             } catch (e) {
                 return [];
             }
@@ -103,38 +70,41 @@ export default class GoogleItPopover {
     _createPopover = () => {
         const coordinates = this._getCoordinates();
 
-        if (coordinates.length) {
-            this.popover = document.createElement('div');
-            this.popover.id = 'google-it-highlighter-popover';
+        if (!coordinates.length) {
+            return;
+        }
 
-            const googleIconURL = chrome.runtime.getURL('assets/google.png');
-            const pdfIconURL = chrome.runtime.getURL('assets/pdf.png');
-            const docIconURL = chrome.runtime.getURL('assets/doc.png');
+        const [xPos, yPos, tailClass, searchOptionsClass] = coordinates;
 
-            this.popover.innerHTML = `
-                <div class="search-options-nq">
-                    <span class="tail"></span>
+        this.popover = document.createElement('div');
+        this.popover.id = 'google-it-highlighter-popover';
+
+        const googleIconURL = chrome.runtime.getURL('assets/google.png');
+        const pdfIconURL = chrome.runtime.getURL('assets/pdf.png');
+        const docIconURL = chrome.runtime.getURL('assets/doc.png');
+
+        this.popover.innerHTML = `
+                <div>
+                    <span></span>
                     <img class="search-nq" src="${googleIconURL}" alt="Google search" />
                     <img class="search-nq" src="${pdfIconURL}" alt="search PDF files" data-filetype="pdf" />
                     <img class="search-nq" src="${docIconURL}" alt="search doc files" data-filetype="doc" />
                 </div>
             `;
 
-            this.popover.style.left = `${coordinates[0]}px`;
-            this.popover.style.top = `${coordinates[1]}px`;
-            this.popover
-                .querySelector('.tail')
-                .classList.replace('tail', coordinates[2]);
+        this.popover.style.left = `${xPos}px`;
+        this.popover.style.top = `${yPos}px`;
+        this.popover.querySelector('span').classList.add(tailClass);
+        this.popover.querySelector('div').classList.add(searchOptionsClass);
 
-            this._toggleOptionListeners(true);
+        this._toggleOptionListeners(true);
 
-            document.body.appendChild(this.popover);
-        }
+        document.body.appendChild(this.popover);
     };
 
     _destroyPopover = () => {
         if (this.popover) {
-            this.popover.style.animation = 'google-it-highlighter-outro 0.2s';
+            this.popover.style.animation = 'google-it-highlighter-outro 0.25s';
             this.popover.style.animationFillMode = 'forwards';
 
             this._toggleOptionListeners(false);
@@ -145,7 +115,6 @@ export default class GoogleItPopover {
                 }
 
                 this.popover = null;
-                this.text = '';
             });
         }
     };
@@ -166,9 +135,5 @@ export default class GoogleItPopover {
 
         this._destroyPopover();
         return true;
-    };
-
-    quickSearch = () => {
-        this._doSearch('');
     };
 }
