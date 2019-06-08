@@ -1,6 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Search It Highlighter",
+  "short_name": "SIH",
   "version": "1.2.0",
   "description": "Easily google, bing, yahoo, etc. search any highlighted text!",
   "author": "Nikki Louis Quibin",
