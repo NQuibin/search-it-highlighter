@@ -1,9 +1,8 @@
 /**
- * Google icon provided by Freepik: https://www.freepik.com/
- * PDF and DOC icon provided by Dimitry Miroliubov: https://www.flaticon.com/authors/dimitry-miroliubov
+ * Google, Bing, and Yahoo icon provided by Freepik: https://www.freepik.com/
  */
 
-import { searchSelectedText } from './searchText';
+import { searchSelectedText, SEARCH_TYPES } from './searchText';
 
 export default class GoogleItPopover {
     constructor() {
@@ -11,8 +10,8 @@ export default class GoogleItPopover {
     }
 
     _handleOptionClick = e => {
-        const fileType = e.currentTarget.getAttribute('data-filetype');
-        searchSelectedText(fileType);
+        const searchType = e.currentTarget.getAttribute('data-searchType');
+        searchSelectedText(searchType);
     };
 
     _toggleOptionListeners = add => {
@@ -79,16 +78,31 @@ export default class GoogleItPopover {
         this.popover = document.createElement('div');
         this.popover.id = 'google-it-highlighter-popover';
 
-        const googleIconURL = chrome.runtime.getURL('assets/google.png');
-        const pdfIconURL = chrome.runtime.getURL('assets/pdf.png');
-        const docIconURL = chrome.runtime.getURL('assets/doc.png');
+        const googleIconURL = chrome.runtime.getURL('assets/google.svg');
+        const bingIconURL = chrome.runtime.getURL('assets/bing.svg');
+        const yahooIconURL = chrome.runtime.getURL('assets/yahoo.svg');
 
         this.popover.innerHTML = `
                 <div>
                     <span></span>
-                    <img class="search-nq" src="${googleIconURL}" alt="Google search" />
-                    <img class="search-nq" src="${pdfIconURL}" alt="search PDF files" data-filetype="pdf" />
-                    <img class="search-nq" src="${docIconURL}" alt="search doc files" data-filetype="doc" />
+                    <img 
+                        class="search-nq" 
+                        src="${googleIconURL}" 
+                        alt="Google search" 
+                        data-searchType="${SEARCH_TYPES.GOOGLE}" 
+                    />
+                    <img 
+                        class="search-nq" 
+                        src="${bingIconURL}" 
+                        alt="Bing search" 
+                        data-searchType="${SEARCH_TYPES.BING}" 
+                    />
+                    <img 
+                        class="search-nq" 
+                        src="${yahooIconURL}" 
+                        alt="Yahoo search" 
+                        data-searchType="${SEARCH_TYPES.YAHOO}" 
+                    />
                 </div>
             `;
 

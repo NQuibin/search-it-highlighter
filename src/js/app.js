@@ -1,5 +1,5 @@
 import GoogleItPopover from './googleItPopover';
-import { searchSelectedText } from './searchText';
+import { searchSelectedText, SEARCH_TYPES } from './searchText';
 
 import '../styles/popover.scss';
 
@@ -30,7 +30,7 @@ const createGoogleItHighlighter = e => {
         }
 
         if (keyPressCount > 1) {
-            searchSelectedText();
+            searchSelectedText(SEARCH_TYPES.GOOGLE);
         }
 
         keyPressCount = 0;
