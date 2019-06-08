@@ -13,30 +13,23 @@ $border-triangle-style: $border-width solid $background-color;
     transform: translateX(-50%);
 };
 
-@mixin style-tail($tail-anchor) {
+@mixin style-tail($tail-anchor, $tail-border) {
     @extend %tail-base;
     #{$tail-anchor}: (-$border-width);
 
     @if $tail-anchor == top or $tail-anchor == bottom {
         border-left: $border-transparent-style;
         border-right: $border-transparent-style;
-
-        @if $tail-anchor == top {
-            border-bottom: $border-triangle-style;
-        } @else {
-            border-top: $border-triangle-style;
-        }
+        border-#{$tail-border}: $border-triangle-style;
     } @else if $tail-anchor == left or $tail-anchor == right {
         top: 50%;
         transform: translate(0, -50%);
         margin: 0;
         border-top: $border-transparent-style;
         border-bottom: $border-transparent-style;
+        border-#{$tail-border}: $border-triangle-style;
 
-        @if $tail-anchor == left {
-            border-right: $border-triangle-style;
-        } @else {
-            border-left: $border-triangle-style;
+        @if $tail-anchor == right {
             left: auto;
         }
     }
@@ -81,11 +74,11 @@ $border-triangle-style: $border-width solid $background-color;
         }
 
         .tail {
-            @include style-tail(bottom);
+            @include style-tail(bottom, top);
 
-            &-top { @include style-tail(top); }
-            &-left { @include style-tail(left); }
-            &-right { @include style-tail(right); }
+            &-top { @include style-tail(top, bottom); }
+            &-left { @include style-tail(left, right); }
+            &-right { @include style-tail(right, left); }
         }
     }
 }
