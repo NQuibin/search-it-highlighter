@@ -43,6 +43,7 @@ $border-triangle-style: $border-width solid $background-color;
     border-radius: 10px;
     background-color: $background-color;
     box-shadow: 0 0 4px 2px #000000;
+    outline: none;
     animation: google-it-highlighter-intro 0.3s;
     animation-fill-mode: forwards;
 

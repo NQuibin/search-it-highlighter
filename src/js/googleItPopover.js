@@ -14,6 +14,14 @@ export default class GoogleItPopover {
         searchSelectedText(searchType);
     };
 
+    _handleOptionKeyUp = e => {
+        const searchType = e.currentTarget.getAttribute('data-searchType');
+
+        if (e.key === 'Enter' && searchType) {
+            searchSelectedText(searchType);
+        }
+    };
+
     _toggleOptionListeners = add => {
         const action = add ? 'addEventListener' : 'removeEventListener';
         const options = this.popover.querySelectorAll(
@@ -22,6 +30,7 @@ export default class GoogleItPopover {
 
         for (const option of options) {
             option[action]('click', this._handleOptionClick);
+            option[action]('keyup', this._handleOptionKeyUp);
         }
     };
 
@@ -77,6 +86,7 @@ export default class GoogleItPopover {
 
         this.popover = document.createElement('div');
         this.popover.id = 'google-it-highlighter-popover';
+        this.popover.tabIndex = 0;
 
         const googleIconURL = chrome.runtime.getURL('assets/google.svg');
         const bingIconURL = chrome.runtime.getURL('assets/bing.svg');
@@ -88,19 +98,22 @@ export default class GoogleItPopover {
                     <img 
                         class="search-nq" 
                         src="${googleIconURL}" 
-                        alt="Google search" 
+                        alt="Google search"
+                        tabindex="0"
                         data-searchType="${SEARCH_TYPES.GOOGLE}" 
                     />
                     <img 
                         class="search-nq" 
                         src="${bingIconURL}" 
-                        alt="Bing search" 
+                        alt="Bing search"
+                        tabindex="0"
                         data-searchType="${SEARCH_TYPES.BING}" 
                     />
                     <img 
                         class="search-nq" 
                         src="${yahooIconURL}" 
                         alt="Yahoo search" 
+                        tabindex="0"
                         data-searchType="${SEARCH_TYPES.YAHOO}" 
                     />
                 </div>
@@ -114,6 +127,7 @@ export default class GoogleItPopover {
         this._toggleOptionListeners(true);
 
         document.body.appendChild(this.popover);
+        this.popover.focus();
     };
 
     _destroyPopover = () => {
