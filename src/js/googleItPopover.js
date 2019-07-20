@@ -83,9 +83,10 @@ export default class GoogleItPopover {
         }
 
         const [xPos, yPos, tailClass, searchOptionsClass] = coordinates;
+        const popoverID = 'google-it-highlighter-popover';
 
         this.popover = document.createElement('div');
-        this.popover.id = 'google-it-highlighter-popover';
+        this.popover.id = popoverID;
         this.popover.tabIndex = 0;
 
         const googleIconURL = chrome.runtime.getURL('assets/google.svg');

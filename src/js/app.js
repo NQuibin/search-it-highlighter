@@ -5,22 +5,15 @@ import '../styles/popover.scss';
 
 const TRIGGER_KEYS = ['g', 'G'];
 
-let popover = null;
+let popover = new GoogleItPopover();
 let keyPressCount = 0;
 
 const destroyGoogleItHighlighter = () => {
-    if (popover) {
-        popover.destroy();
-        popover = null;
-    }
+    popover.destroy();
 };
 
 const createGoogleItHighlighter = e => {
     if (TRIGGER_KEYS.includes(e.key)) {
-        if (!popover) {
-            popover = new GoogleItPopover();
-        }
-
         keyPressCount += 1;
     }
 
